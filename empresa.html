@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante Exemplo - Eu Indico Cabreúva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .gallery-image {
+            transition: transform 0.3s ease;
+        }
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Barra Superior -->
+    <div class="bg-emerald-700 text-white py-2">
+        <div class="container mx-auto px-4 flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4">
+                <a href="tel:1145281000" class="hover:text-emerald-200 flex items-center transition-colors">
+                    <i class="fas fa-phone mr-1 text-xs"></i> (11) 4528-1000
+                </a>
+                <a href="mailto:contato@euindicocabreuva.com.br" class="hover:text-emerald-200 flex items-center transition-colors">
+                    <i class="fas fa-envelope mr-1 text-xs"></i> contato@euindicocabreuva.com.br
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#" class="hover:text-emerald-200 transition-colors">Acessibilidade</a>
+                <a href="#" class="hover:text-emerald-200 transition-colors">Revista Digital</a>
+                <a href="index.html" class="hover:text-emerald-200 transition-colors">Voltar ao Site</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <div class="h-12 w-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Eu Indico Cabreúva</h1>
+                    <p class="text-sm text-gray-600">Perfil da Empresa</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-emerald-600 flex items-center transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span>Voltar</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Cabeçalho da Empresa -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8 fade-in">
+            <div class="h-64 bg-gradient-to-r from-emerald-400 to-emerald-600 flex items-center justify-center relative">
+                <i class="fas fa-utensils text-white text-6xl"></i>
+                <div class="absolute top-4 right-4">
+                    <span class="bg-emerald-100 text-emerald-800 text-sm font-medium px-3 py-1 rounded-full">MASTER PLUS</span>
+                </div>
+            </div>
+            
+            <div class="p-8">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                    <div class="flex-1">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">Restaurante Exemplo</h1>
+                        <p class="text-xl text-gray-600 mb-4">Culinária brasileira com ingredientes locais</p>
+                        
+                        <!-- Avaliações -->
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400 text-xl">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="ml-3 text-lg text-gray-600">5.0 (47 avaliações)</span>
+                        </div>
+
+                        <!-- Informações de Contato -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-map-marker-alt mr-3 text-emerald-600"></i>
+                                <span>Rua das Flores, 123 - Centro, Cabreúva</span>
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-phone mr-3 text-emerald-600"></i>
+                                <span>(11) 4528-1234</span>
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fab fa-whatsapp mr-3 text-emerald-600"></i>
+                                <span>(11) 99999-9999</span>
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-globe mr-3 text-emerald-600"></i>
+                                <a href="#" class="text-emerald-600 hover:text-emerald-700">www.restauranteexemplo.com</a>
+                            </div>
+                        </div>
+
+                        <!-- Redes Sociais -->
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-full transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-full transition-colors">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="mt-6 lg:mt-0 lg:ml-8 flex flex-col space-y-3">
+                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
+                            <i class="fas fa-star mr-2"></i>
+                            Avaliar
+                        </button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
+                            <i class="fas fa-share mr-2"></i>
+                            Compartilhar
+                        </button>
+                        <button class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
+                            <i class="fas fa-flag mr-2"></i>
+                            Reportar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coluna Principal -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Sobre -->
+                <div class="bg-white rounded-lg shadow-lg p-8 fade-in">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Sobre o Restaurante</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        O Restaurante Exemplo é um estabelecimento familiar que há mais de 20 anos serve a comunidade de Cabreúva com pratos tradicionais da culinária brasileira. Utilizamos ingredientes frescos e locais, sempre priorizando a qualidade e o sabor autêntico.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed">
+                        Nossa especialidade são os pratos caseiros, como feijoada, moqueca, e nosso famoso frango caipira. Também oferecemos opções vegetarianas e um ambiente acolhedor para toda a família.
+                    </p>
+                </div>
+
+                <!-- Galeria de Fotos -->
+                <div class="bg-white rounded-lg shadow-lg p-8 fade-in">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Galeria de Fotos</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="aspect-square bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg overflow-hidden gallery-image cursor-pointer">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-utensils text-white text-3xl"></i>
+                            </div>
+                        </div>
+                        <div class="aspect-square bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg overflow-hidden gallery-image cursor-pointer">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-hamburger text-white text-3xl"></i>
+                            </div>
+                        </div>
+                        <div class="aspect-square bg-gradient-to-br from-red-400 to-red-600 rounded-lg overflow-hidden gallery-image cursor-pointer">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-pizza-slice text-white text-3xl"></i>
+                            </div>
+                        </div>
+                        <div class="aspect-square bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg overflow-hidden gallery-image cursor-pointer">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-coffee text-white text-3xl"></i>
+                            </div>
+                        </div>
+                        <div class="aspect-square bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg overflow-hidden gallery-image cursor-pointer">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-wine-glass text-white text-3xl"></i>
+                            </div>
+                        </div>
+                        <div class="aspect-square bg-gradient-to-br from-green-400 to-green-600 rounded-lg overflow-hidden gallery-image cursor-pointer">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-leaf text-white text-3xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Avaliações -->
+                <div class="bg-white rounded-lg shadow-lg p-8 fade-in">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Avaliações dos Clientes</h2>
+                    
+                    <!-- Resumo das Avaliações -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-4xl font-bold text-gray-800">5.0</span>
+                                <div class="ml-4">
+                                    <div class="flex text-yellow-400 text-xl">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600">47 avaliações</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Distribuição das Estrelas -->
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-600 w-8">5★</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2 mx-3">
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                                <span class="text-sm text-gray-600 w-8">40</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-600 w-8">4★</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2 mx-3">
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 15%"></div>
+                                </div>
+                                <span class="text-sm text-gray-600 w-8">7</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-600 w-8">3★</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2 mx-3">
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                                <span class="text-sm text-gray-600 w-8">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Avaliações Individuais -->
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-6">
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-emerald-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800">Maria Silva</h4>
+                                        <span class="text-sm text-gray-500">2 dias atrás</span>
+                                    </div>
+                                    <div class="flex text-yellow-400 mb-2">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600">Excelente restaurante! A comida é deliciosa e o atendimento é muito bom. Recomendo especialmente a feijoada de sábado. Ambiente familiar e acolhedor.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-b border-gray-200 pb-6">
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-blue-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800">João Santos</h4>
+                                        <span class="text-sm text-gray-500">1 semana atrás</span>
+                                    </div>
+                                    <div class="flex text-yellow-400 mb-2">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600">Sempre venho aqui com a família. Os pratos são bem servidos e o preço é justo. O frango caipira é imperdível!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-purple-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800">Ana Costa</h4>
+                                        <span class="text-sm text-gray-500">2 semanas atrás</span>
+                                    </div>
+                                    <div class="flex text-yellow-400 mb-2">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600">Boa comida caseira e ambiente agradável. Só achei que poderia ter mais opções vegetarianas no cardápio.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão para Ver Mais -->
+                    <div class="mt-6 text-center">
+                        <button class="text-emerald-600 hover:text-emerald-700 font-medium">
+                            Ver todas as avaliações
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Horário de Funcionamento -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Horário de Funcionamento</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Segunda-feira</span>
+                            <span class="text-gray-800 font-medium">11:00 - 22:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Terça-feira</span>
+                            <span class="text-gray-800 font-medium">11:00 - 22:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Quarta-feira</span>
+                            <span class="text-gray-800 font-medium">11:00 - 22:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Quinta-feira</span>
+                            <span class="text-gray-800 font-medium">11:00 - 22:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Sexta-feira</span>
+                            <span class="text-gray-800 font-medium">11:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Sábado</span>
+                            <span class="text-gray-800 font-medium">11:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Domingo</span>
+                            <span class="text-gray-800 font-medium">11:00 - 21:00</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                            <span class="text-green-800 font-medium">Aberto agora</span>
+                        </div>
+                        <p class="text-green-700 text-sm mt-1">Fecha às 22:00</p>
+                    </div>
+                </div>
+
+                <!-- Localização -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Localização</h3>
+                    <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                        <i class="fas fa-map text-gray-400 text-3xl"></i>
+                    </div>
+                    <p class="text-gray-600 mb-4">Rua das Flores, 123 - Centro, Cabreúva - SP</p>
+                    <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md font-medium transition-colors">
+                        <i class="fas fa-directions mr-2"></i>
+                        Como chegar
+                    </button>
+                </div>
+
+                <!-- Empresas Relacionadas -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Empresas Similares</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-utensils text-blue-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-gray-800">Pizzaria Central</h4>
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="ml-1 text-gray-600">(23)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-coffee text-green-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-gray-800">Café da Praça</h4>
+                                <div class="flex text-yellow-400 text-sm">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-600">(31)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Avaliação -->
+    <div id="review-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Avaliar Restaurante</h3>
+                <button id="close-review-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="review-form">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sua avaliação</label>
+                        <div class="flex space-x-1" id="star-rating">
+                            <i class="fas fa-star text-gray-300 text-2xl cursor-pointer hover:text-yellow-400" data-rating="1"></i>
+                            <i class="fas fa-star text-gray-300 text-2xl cursor-pointer hover:text-yellow-400" data-rating="2"></i>
+                            <i class="fas fa-star text-gray-300 text-2xl cursor-pointer hover:text-yellow-400" data-rating="3"></i>
+                            <i class="fas fa-star text-gray-300 text-2xl cursor-pointer hover:text-yellow-400" data-rating="4"></i>
+                            <i class="fas fa-star text-gray-300 text-2xl cursor-pointer hover:text-yellow-400" data-rating="5"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="review-text" class="block text-sm font-medium text-gray-700 mb-2">Seu comentário</label>
+                        <textarea id="review-text" name="review-text" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" placeholder="Conte sobre sua experiência..."></textarea>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md font-medium transition-colors">
+                            Enviar Avaliação
+                        </button>
+                        <button type="button" id="cancel-review" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md font-medium transition-colors">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center mb-4">
+                <div class="h-8 w-8 bg-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-map-marker-alt text-white"></i>
+                </div>
+                <h4 class="text-lg font-semibold">Eu Indico Cabreúva</h4>
+            </div>
+            <p class="text-gray-400 mb-4">O guia completo para descobrir o melhor de Cabreúva.</p>
+            <p class="text-gray-400">&copy; 2024 Eu Indico Cabreúva. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Modal de avaliação
+        const reviewModal = document.getElementById('review-modal');
+        const closeReviewModal = document.getElementById('close-review-modal');
+        const cancelReview = document.getElementById('cancel-review');
+        const reviewForm = document.getElementById('review-form');
+
+        // Abrir modal de avaliação
+        document.querySelector('button:has(.fa-star)').addEventListener('click', () => {
+            reviewModal.classList.remove('hidden');
+        });
+
+        // Fechar modal
+        closeReviewModal.addEventListener('click', () => {
+            reviewModal.classList.add('hidden');
+        });
+
+        cancelReview.addEventListener('click', () => {
+            reviewModal.classList.add('hidden');
+        });
+
+        // Sistema de estrelas
+        const stars = document.querySelectorAll('#star-rating i');
+        let selectedRating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', () => {
+                const rating = parseInt(star.dataset.rating);
+                highlightStars(rating);
+            });
+        });
+
+        document.getElementById('star-rating').addEventListener('mouseleave', () => {
+            updateStars();
+        });
+
+        function updateStars() {
+            stars.forEach((star, index) => {
+                if (index < selectedRating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        function highlightStars(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Submissão da avaliação
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (selectedRating === 0) {
+                alert('Por favor, selecione uma avaliação de 1 a 5 estrelas.');
+                return;
+            }
+
+            const reviewText = document.getElementById('review-text').value;
+
+            console.log('Avaliação enviada:', {
+                rating: selectedRating,
+                text: reviewText
+            });
+
+            alert('Avaliação enviada com sucesso! Obrigado pelo seu feedback.');
+            reviewModal.classList.add('hidden');
+            
+            // Reset do formulário
+            selectedRating = 0;
+            updateStars();
+            reviewForm.reset();
+        });
+
+        // Compartilhar
+        document.querySelector('button:has(.fa-share)').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Restaurante Exemplo - Eu Indico Cabreúva',
+                    text: 'Confira este ótimo restaurante em Cabreúva!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para navegadores que não suportam Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                });
+            }
+        });
+
+        // Reportar
+        document.querySelector('button:has(.fa-flag)').addEventListener('click', () => {
+            const reason = prompt('Por que você está reportando esta empresa?\n\n1. Informações incorretas\n2. Conteúdo inadequado\n3. Empresa fechada\n4. Outro motivo\n\nDigite o número da opção ou descreva o motivo:');
+            
+            if (reason) {
+                console.log('Empresa reportada:', reason);
+                alert('Obrigado pelo seu reporte. Nossa equipe irá analisar as informações.');
+            }
+        });
+
+        // Como chegar
+        document.querySelector('button:has(.fa-directions)').addEventListener('click', () => {
+            const address = 'Rua das Flores, 123 - Centro, Cabreúva - SP';
+            const encodedAddress = encodeURIComponent(address);
+            window.open(`https://www.google.com/maps/search/${encodedAddress}`, '_blank');
+        });
+
+        // Galeria de fotos
+        document.querySelectorAll('.gallery-image').forEach(image => {
+            image.addEventListener('click', () => {
+                // Aqui você poderia implementar um lightbox para visualizar as imagens
+                alert('Visualizador de imagens seria implementado aqui.');
+            });
+        });
+    </script>
+</body>
+</html>
+

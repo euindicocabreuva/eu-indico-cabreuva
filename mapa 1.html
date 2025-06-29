@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Cabreúva - Eu Indico Cabreúva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tab-active {
+            background-color: #10b981;
+            color: white;
+            border-bottom: 2px solid #10b981;
+        }
+        .tab-inactive {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+        }
+        
+        #map {
+            height: 650px;
+            width: 100%;
+            border-radius: 0.5rem;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .legend {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 2px 0;
+        }
+        
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-left: 4px solid #10b981;
+        }
+        
+        .zone-details {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        .zone-details h5 {
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .zone-details ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .zone-details li {
+            padding: 4px 0;
+            border-bottom: 1px solid #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .zone-details li:last-child {
+            border-bottom: none;
+        }
+        
+        .zone-details li:before {
+            content: "▸";
+            color: #10b981;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .plano-diretor-info {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .plano-diretor-info h4 {
+            color: #065f46;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        
+        .search-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .search-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background: #059669;
+        }
+        
+        .bairro-item {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 4px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .bairro-item:hover {
+            background: #10b981;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .bairro-selected {
+            background: #10b981;
+            color: white;
+        }
+        
+        .search-results {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .search-result-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-result-item:hover {
+            background: #f3f4f6;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Barra Superior -->
+    <div class="bg-emerald-700 text-white py-2">
+        <div class="container mx-auto px-4 flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4">
+                <a href="tel:1145281000" class="hover:text-emerald-200 flex items-center transition-colors">
+                    <i class="fas fa-phone mr-1 text-xs"></i> (11) 4528-1000
+                </a>
+                <a href="mailto:contato@euindicocabreuva.com.br" class="hover:text-emerald-200 flex items-center transition-colors">
+                    <i class="fas fa-envelope mr-1 text-xs"></i> contato@euindicocabreuva.com.br
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#" class="hover:text-emerald-200 transition-colors">Acessibilidade</a>
+                <a href="#" class="hover:text-emerald-200 transition-colors">Revista Digital</a>
+                <a href="index.html" class="hover:text-emerald-200 transition-colors">Voltar ao Site</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <div class="h-12 w-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Eu Indico Cabreúva</h1>
+                    <p class="text-sm text-gray-600">Mapa da Cidade - Bairros e Endereços</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-emerald-600 flex items-center transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span>Voltar</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Informações do Plano Diretor -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="plano-diretor-info">
+            <h4 class="text-lg">
+                <i class="fas fa-map-marked-alt mr-2"></i>
+                Mapa Interativo de Cabreúva por Bairros
+            </h4>
+            <p class="text-gray-700 text-sm">
+                <strong>Explore todos os bairros de Cabreúva</strong> - Este mapa apresenta a divisão territorial completa do município, 
+                permitindo buscar endereços específicos e navegar pelos diferentes bairros da cidade.
+            </p>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto px-4 pb-8">
+        <!-- Busca por Endereço -->
+        <div class="search-container fade-in">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-search mr-2 text-emerald-600"></i>
+                Buscar Endereço em Cabreúva
+            </h3>
+            <div class="flex flex-col md:flex-row gap-4 relative">
+                <div class="flex-1 relative">
+                    <input 
+                        type="text" 
+                        id="address-search" 
+                        class="search-input" 
+                        placeholder="Digite o endereço (ex: Rua Floriano Peixoto, 158)"
+                        autocomplete="off"
+                    >
+                    <div id="search-results" class="search-results"></div>
+                </div>
+                <button id="search-button" class="search-button">
+                    <i class="fas fa-search mr-2"></i>
+                    Buscar no Mapa
+                </button>
+            </div>
+            <p class="text-sm text-gray-600 mt-2">
+                <i class="fas fa-info-circle mr-1"></i>
+                Digite o nome da rua, avenida ou ponto de referência em Cabreúva
+            </p>
+        </div>
+
+        <!-- Seleção de Bairros -->
+        <div class="bg-white rounded-lg shadow-lg mb-8 fade-in">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-map-signs mr-2 text-emerald-600"></i>
+                    Bairros e Distritos de Cabreúva
+                </h3>
+                <p class="text-gray-600 mb-4">Clique em um bairro para visualizá-lo no mapa:</p>
+                <div class="flex flex-wrap" id="bairros-container">
+                    <!-- Bairros serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Abas de Visualização -->
+        <div class="bg-white rounded-lg shadow-lg mb-8 fade-in">
+            <div class="border-b border-gray-200">
+                <nav class="flex flex-wrap space-x-2 md:space-x-8 px-6" aria-label="Tabs">
+                    <button class="tab-button py-4 px-2 md:px-4 border-b-2 font-medium text-xs md:text-sm tab-active" data-view="todos">
+                        <i class="fas fa-map mr-1 md:mr-2"></i>
+                        <span class="hidden sm:inline">Todos os </span>Bairros
+                    </button>
+                    <button class="tab-button py-4 px-2 md:px-4 border-b-2 font-medium text-xs md:text-sm tab-inactive" data-view="zoneamento">
+                        <i class="fas fa-layer-group mr-1 md:mr-2"></i>
+                        <span class="hidden sm:inline">Por </span>Zoneamento
+                    </button>
+                    <button class="tab-button py-4 px-2 md:px-4 border-b-2 font-medium text-xs md:text-sm tab-inactive" data-view="densidade">
+                        <i class="fas fa-chart-bar mr-1 md:mr-2"></i>
+                        <span class="hidden sm:inline">Por </span>Densidade
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Conteúdo das Abas -->
+            <div class="p-6">
+                <!-- Mapa -->
+                <div id="map" class="mb-6"></div>
+
+                <!-- Informações do Bairro Selecionado -->
+                <div id="bairro-info" class="info-card rounded-lg p-6">
+                    <div id="info-geral" class="bairro-content">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-city mr-2 text-emerald-600"></i>
+                            Município de Cabreúva - Visão Geral
+                        </h3>
+                        <p class="text-gray-600 mb-6">
+                            Cabreúva está localizada na região metropolitana de Sorocaba, no estado de São Paulo. 
+                            O município possui <strong>14 bairros principais</strong> e diversos distritos, 
+                            organizados conforme o <strong>Plano Diretor Municipal</strong>.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="zone-details">
+                                <h5><i class="fas fa-map-pin mr-2 text-emerald-600"></i>Bairros Centrais</h5>
+                                <ul>
+                                    <li>Centro (área histórica)</li>
+                                    <li>Jacaré (distrito principal)</li>
+                                    <li>Vilarejo (área residencial)</li>
+                                    <li>Pinhal (zona mista)</li>
+                                </ul>
+                            </div>
+                            <div class="zone-details">
+                                <h5><i class="fas fa-tree mr-2 text-emerald-600"></i>Bairros Rurais</h5>
+                                <ul>
+                                    <li>Bananal (agricultura)</li>
+                                    <li>São Francisco (rural)</li>
+                                    <li>Jundiuvira (agropecuária)</li>
+                                    <li>Bonfim (zona rural)</li>
+                                </ul>
+                            </div>
+                            <div class="zone-details">
+                                <h5><i class="fas fa-water mr-2 text-emerald-600"></i>Outros Distritos</h5>
+                                <ul>
+                                    <li>Caí (área de manancial)</li>
+                                    <li>Piraí (zona rural)</li>
+                                    <li>Guaxatuba (distrito)</li>
+                                    <li>Campininha (rural)</li>
+                                    <li>Itaguá (distrito)</li>
+                                    <li>Barrinha (zona rural)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Como Usar -->
+            <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-question-circle mr-2 text-emerald-600"></i>
+                    Como Usar o Mapa
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="bg-emerald-100 rounded-full p-2 mr-3 mt-1">
+                            <i class="fas fa-search text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Buscar Endereço</h4>
+                            <p class="text-gray-600 text-sm">Digite o endereço completo ou nome da rua para localizar no mapa</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-emerald-100 rounded-full p-2 mr-3 mt-1">
+                            <i class="fas fa-mouse-pointer text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Selecionar Bairro</h4>
+                            <p class="text-gray-600 text-sm">Clique em qualquer bairro da lista para visualizá-lo no mapa</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-emerald-100 rounded-full p-2 mr-3 mt-1">
+                            <i class="fas fa-expand-arrows-alt text-emerald-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Navegar no Mapa</h4>
+                            <p class="text-gray-600 text-sm">Use os controles de zoom e arraste para explorar diferentes áreas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contatos Úteis -->
+            <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-phone mr-2 text-emerald-600"></i>
+                    Informações e Contatos
+                </h3>
+                <div class="space-y-4">
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-800">Prefeitura Municipal</h4>
+                        <p class="text-gray-600 text-sm mb-1">Informações gerais sobre a cidade</p>
+                        <p class="text-emerald-600 font-medium">(11) 4528-1000</p>
+                        <p class="text-gray-500 text-xs">Rua Floriano Peixoto, 158 - Centro</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-800">Secretaria de Obras</h4>
+                        <p class="text-gray-600 text-sm mb-1">Informações sobre endereços e numeração</p>
+                        <p class="text-emerald-600 font-medium">obras@cabreuva.sp.gov.br</p>
+                        <p class="text-gray-500 text-xs">Atendimento: Segunda a Sexta, 8h às 17h</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-800">Portal Eu Indico Cabreúva</h4>
+                        <p class="text-gray-600 text-sm mb-1">Encontre empresas por bairro</p>
+                        <p class="text-emerald-600 font-medium">contato@euindicocabreuva.com.br</p>
+                        <p class="text-gray-500 text-xs">Cadastre sua empresa no portal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center mb-4">
+                <div class="h-8 w-8 bg-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-map-marker-alt text-white"></i>
+                </div>
+                <h4 class="text-lg font-semibold">Eu Indico Cabreúva</h4>
+            </div>
+            <p class="text-gray-400 mb-2">Mapa interativo com todos os bairros de Cabreúva</p>
+            <p class="text-gray-500 text-sm">Busque endereços e explore a cidade</p>
+            <p class="text-gray-400 mt-4">&copy; 2024 Eu Indico Cabreúva. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Coordenadas de Cabreúva
+        const cabreuvaCenter = [-23.3081, -47.1356];
+        
+        // Lista completa de bairros de Cabreúva
+        const bairrosCabreuva = [
+            { nome: "Centro", coords: [-23.3081, -47.1356], cor: "#ef4444", descricao: "Centro histórico e comercial da cidade" },
+            { nome: "Jacaré", coords: [-23.290, -47.125], cor: "#3b82f6", descricao: "Principal distrito urbano de Cabreúva" },
+            { nome: "Vilarejo", coords: [-23.325, -47.150], cor: "#10b981", descricao: "Área residencial em expansão" },
+            { nome: "Bananal", coords: [-23.350, -47.140], cor: "#f59e0b", descricao: "Zona rural com atividades agropecuárias" },
+            { nome: "São Francisco", coords: [-23.340, -47.120], cor: "#8b5cf6", descricao: "Distrito rural tradicional" },
+            { nome: "Pinhal", coords: [-23.295, -47.145], cor: "#f97316", descricao: "Zona mista residencial e comercial" },
+            { nome: "Caí", coords: [-23.280, -47.160], cor: "#06b6d4", descricao: "Área de proteção aos mananciais" },
+            { nome: "Piraí", coords: [-23.320, -47.100], cor: "#84cc16", descricao: "Zona rural com agricultura familiar" },
+            { nome: "Guaxatuba", coords: [-23.330, -47.090], cor: "#ec4899", descricao: "Distrito rural preservado" },
+            { nome: "Campininha", coords: [-23.315, -47.180], cor: "#6366f1", descricao: "Área rural com turismo" },
+            { nome: "Jundiuvira", coords: [-23.360, -47.130], cor: "#14b8a6", descricao: "Zona rural com pecuária" },
+            { nome: "Bonfim", coords: [-23.345, -47.110], cor: "#f43f5e", descricao: "Distrito rural tradicional" },
+            { nome: "Itaguá", coords: [-23.300, -47.180], cor: "#a855f7", descricao: "Área rural preservada" },
+            { nome: "Barrinha", coords: [-23.310, -47.170], cor: "#22c55e", descricao: "Zona rural com agricultura" }
+        ];
+        
+        // Endereços conhecidos para busca
+        const enderecosConhecidos = [
+            { endereco: "Rua Floriano Peixoto, 158", bairro: "Centro", coords: [-23.3081, -47.1356] },
+            { endereco: "Avenida Major Antonio da Silveira", bairro: "Centro", coords: [-23.3085, -47.1350] },
+            { endereco: "Prefeitura Municipal", bairro: "Centro", coords: [-23.3081, -47.1356] },
+            { endereco: "Igreja Matriz", bairro: "Centro", coords: [-23.3075, -47.1360] },
+            { endereco: "Terminal Rodoviário", bairro: "Centro", coords: [-23.3100, -47.1330] },
+            { endereco: "Escola Municipal Central", bairro: "Centro", coords: [-23.3070, -47.1370] },
+            { endereco: "Centro de Saúde", bairro: "Centro", coords: [-23.3090, -47.1340] },
+            { endereco: "Praça da Matriz", bairro: "Centro", coords: [-23.3078, -47.1358] },
+            { endereco: "Distrito do Jacaré", bairro: "Jacaré", coords: [-23.290, -47.125] },
+            { endereco: "Escola do Jacaré", bairro: "Jacaré", coords: [-23.292, -47.127] },
+            { endereco: "Posto de Saúde Jacaré", bairro: "Jacaré", coords: [-23.288, -47.123] },
+            { endereco: "Bairro Vilarejo", bairro: "Vilarejo", coords: [-23.325, -47.150] },
+            { endereco: "Escola do Vilarejo", bairro: "Vilarejo", coords: [-23.327, -47.152] },
+            { endereco: "Zona Rural Bananal", bairro: "Bananal", coords: [-23.350, -47.140] },
+            { endereco: "Igreja São Francisco", bairro: "São Francisco", coords: [-23.340, -47.120] },
+            { endereco: "Área de Manancial Caí", bairro: "Caí", coords: [-23.280, -47.160] }
+        ];
+        
+        // Inicializar o mapa
+        let map = L.map('map').setView(cabreuvaCenter, 12);
+        
+        // Adicionar camada base do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors | Mapa de Bairros de Cabreúva'
+        }).addTo(map);
+
+        // Armazenar marcadores e layers
+        let bairroMarkers = {};
+        let currentBairro = null;
+        let searchMarker = null;
+
+        // Função para criar marcadores dos bairros
+        function createBairroMarkers() {
+            bairrosCabreuva.forEach(bairro => {
+                const marker = L.circleMarker(bairro.coords, {
+                    radius: 8,
+                    fillColor: bairro.cor,
+                    color: '#ffffff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div style="font-family: Arial, sans-serif;">
+                        <h4 style="margin: 0 0 8px 0; color: ${bairro.cor}; font-size: 16px;">
+                            <i class="fas fa-map-marker-alt" style="margin-right: 6px;"></i>
+                            ${bairro.nome}
+                        </h4>
+                        <p style="margin: 0; font-size: 12px; color: #666;">
+                            ${bairro.descricao}
+                        </p>
+                    </div>
+                `);
+                
+                bairroMarkers[bairro.nome] = marker;
+            });
+        }
+
+        // Função para criar lista de bairros
+        function createBairrosList() {
+            const container = document.getElementById('bairros-container');
+            bairrosCabreuva.forEach(bairro => {
+                const item = document.createElement('div');
+                item.className = 'bairro-item';
+                item.style.borderLeft = `4px solid ${bairro.cor}`;
+                item.innerHTML = `
+                    <i class="fas fa-map-marker-alt mr-2" style="color: ${bairro.cor};"></i>
+                    ${bairro.nome}
+                `;
+                item.addEventListener('click', () => selectBairro(bairro));
+                container.appendChild(item);
+            });
+        }
+
+        // Função para selecionar um bairro
+        function selectBairro(bairro) {
+            // Remover seleção anterior
+            document.querySelectorAll('.bairro-item').forEach(item => {
+                item.classList.remove('bairro-selected');
+            });
+            
+            // Adicionar seleção atual
+            event.target.classList.add('bairro-selected');
+            
+            // Centralizar mapa no bairro
+            map.setView(bairro.coords, 15);
+            
+            // Abrir popup do marcador
+            if (bairroMarkers[bairro.nome]) {
+                bairroMarkers[bairro.nome].openPopup();
+            }
+            
+            // Atualizar informações
+            updateBairroInfo(bairro);
+            currentBairro = bairro;
+        }
+
+        // Função para atualizar informações do bairro
+        function updateBairroInfo(bairro) {
+            const infoContainer = document.getElementById('bairro-info');
+            infoContainer.innerHTML = `
+                <h3 class="text-xl font-bold mb-4" style="color: ${bairro.cor};">
+                    <i class="fas fa-map-marker-alt mr-2"></i>
+                    Bairro ${bairro.nome}
+                </h3>
+                <p class="text-gray-600 mb-4">${bairro.descricao}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="zone-details">
+                        <h5><i class="fas fa-info-circle mr-2" style="color: ${bairro.cor};"></i>Informações Gerais</h5>
+                        <ul>
+                            <li>Localização: ${bairro.coords[0].toFixed(4)}, ${bairro.coords[1].toFixed(4)}</li>
+                            <li>Município: Cabreúva - SP</li>
+                            <li>Região: ${getBairroRegion(bairro.nome)}</li>
+                            <li>Tipo: ${getBairroType(bairro.nome)}</li>
+                        </ul>
+                    </div>
+                    <div class="zone-details">
+                        <h5><i class="fas fa-building mr-2" style="color: ${bairro.cor};"></i>Características</h5>
+                        <ul>
+                            <li>Zoneamento: ${getZoneamento(bairro.nome)}</li>
+                            <li>Densidade: ${getDensidade(bairro.nome)}</li>
+                            <li>Principais vias: ${getPrincipaisVias(bairro.nome)}</li>
+                            <li>CEP base: ${getCEP(bairro.nome)}</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Funções auxiliares para informações dos bairros
+        function getBairroRegion(nome) {
+            const rurais = ['Bananal', 'São Francisco', 'Piraí', 'Guaxatuba', 'Campininha', 'Jundiuvira', 'Bonfim', 'Itaguá', 'Barrinha'];
+            return rurais.includes(nome) ? 'Zona Rural' : 'Zona Urbana';
+        }
+
+        function getBairroType(nome) {
+            if (nome === 'Centro') return 'Centro Histórico';
+            if (nome === 'Jacaré') return 'Distrito Principal';
+            if (nome === 'Caí') return 'Área de Manancial';
+            return getBairroRegion(nome) === 'Zona Rural' ? 'Bairro Rural' : 'Bairro Urbano';
+        }
+
+        function getZoneamento(nome) {
+            if (nome === 'Centro') return 'Zona Comercial Central';
+            if (nome === 'Jacaré') return 'Zona Residencial/Comercial';
+            if (nome === 'Vilarejo') return 'Zona Residencial';
+            if (nome === 'Pinhal') return 'Zona Mista';
+            if (nome === 'Caí') return 'Área de Proteção Ambiental';
+            return 'Zona Rural';
+        }
+
+        function getDensidade(nome) {
+            if (['Centro', 'Jacaré'].includes(nome)) return 'Alta densidade';
+            if (['Vilarejo', 'Pinhal'].includes(nome)) return 'Média densidade';
+            return 'Baixa densidade';
+        }
+
+        function getPrincipaisVias(nome) {
+            const vias = {
+                'Centro': 'R. Floriano Peixoto, Av. Major Antonio',
+                'Jacaré': 'Estrada do Jacaré',
+                'Vilarejo': 'Estrada do Vilarejo',
+                'Bananal': 'Estrada do Bananal',
+                'São Francisco': 'Estrada São Francisco',
+                'Pinhal': 'Estrada do Pinhal',
+                'Caí': 'Estrada do Caí',
+                'Piraí': 'Estrada do Piraí'
+            };
+            return vias[nome] || 'Estradas rurais';
+        }
+
+        function getCEP(nome) {
+            const ceps = {
+                'Centro': '13315-000',
+                'Jacaré': '13316-000',
+                'Vilarejo': '13317-000',
+                'Bananal': '13318-000'
+            };
+            return ceps[nome] || '13315-xxx';
+        }
+
+        // Função de busca por endereço
+        function searchAddress() {
+            const query = document.getElementById('address-search').value.toLowerCase().trim();
+            if (!query) return;
+
+            // Buscar nos endereços conhecidos
+            const resultado = enderecosConhecidos.find(endereco => 
+                endereco.endereco.toLowerCase().includes(query) ||
+                endereco.bairro.toLowerCase().includes(query)
+            );
+
+            if (resultado) {
+                // Remover marcador anterior
+                if (searchMarker) {
+                    map.removeLayer(searchMarker);
+                }
+
+                // Adicionar novo marcador
+                searchMarker = L.marker(resultado.coords, {
+                    icon: L.divIcon({
+                        className: 'custom-search-marker',
+                        html: '<div style="background: #ef4444; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"><i class="fas fa-search" style="font-size: 12px;"></i></div>',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    })
+                }).addTo(map);
+
+                searchMarker.bindPopup(`
+                    <div style="font-family: Arial, sans-serif;">
+                        <h4 style="margin: 0 0 8px 0; color: #ef4444; font-size: 16px;">
+                            <i class="fas fa-search mr-2"></i>
+                            Endereço Encontrado
+                        </h4>
+                        <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: bold;">
+                            ${resultado.endereco}
+                        </p>
+                        <p style="margin: 0; font-size: 12px; color: #666;">
+                            Bairro: ${resultado.bairro}
+                        </p>
+                    </div>
+                `).openPopup();
+
+                // Centralizar mapa
+                map.setView(resultado.coords, 16);
+
+                // Limpar campo de busca
+                document.getElementById('address-search').value = '';
+                hideSearchResults();
+            } else {
+                alert('Endereço não encontrado. Tente buscar por: nome da rua, bairro ou ponto de referência.');
+            }
+        }
+
+        // Função para mostrar sugestões de busca
+        function showSearchSuggestions(query) {
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (!query || query.length < 2) {
+                hideSearchResults();
+                return;
+            }
+
+            const suggestions = enderecosConhecidos.filter(endereco =>
+                endereco.endereco.toLowerCase().includes(query.toLowerCase()) ||
+                endereco.bairro.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 5);
+
+            if (suggestions.length > 0) {
+                resultsContainer.innerHTML = suggestions.map(suggestion => `
+                    <div class="search-result-item" onclick="selectSuggestion('${suggestion.endereco}')">
+                        <div style="font-weight: 600; color: #374151;">${suggestion.endereco}</div>
+                        <div style="font-size: 12px; color: #6b7280;">Bairro: ${suggestion.bairro}</div>
+                    </div>
+                `).join('');
+                resultsContainer.style.display = 'block';
+            } else {
+                hideSearchResults();
+            }
+        }
+
+        function hideSearchResults() {
+            document.getElementById('search-results').style.display = 'none';
+        }
+
+        function selectSuggestion(endereco) {
+            document.getElementById('address-search').value = endereco;
+            hideSearchResults();
+            searchAddress();
+        }
+
+        // Controle de abas
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const view = this.dataset.view;
+                
+                // Atualizar aparência das abas
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('tab-inactive');
+                });
+                this.classList.remove('tab-inactive');
+                this.classList.add('tab-active');
+                
+                // Aplicar filtros baseados na visualização
+                applyViewFilter(view);
+            });
+        });
+
+        function applyViewFilter(view) {
+            // Implementar diferentes visualizações
+            switch(view) {
+                case 'todos':
+                    // Mostrar todos os bairros
+                    Object.values(bairroMarkers).forEach(marker => {
+                        marker.setStyle({ fillOpacity: 0.8, radius: 8 });
+                    });
+                    break;
+                case 'zoneamento':
+                    // Agrupar por zoneamento
+                    Object.entries(bairroMarkers).forEach(([nome, marker]) => {
+                        const zoneamento = getZoneamento(nome);
+                        if (zoneamento.includes('Rural')) {
+                            marker.setStyle({ fillOpacity: 0.9, radius: 10 });
+                        } else {
+                            marker.setStyle({ fillOpacity: 0.6, radius: 6 });
+                        }
+                    });
+                    break;
+                case 'densidade':
+                    // Mostrar por densidade populacional
+                    Object.entries(bairroMarkers).forEach(([nome, marker]) => {
+                        const densidade = getDensidade(nome);
+                        if (densidade === 'Alta densidade') {
+                            marker.setStyle({ fillOpacity: 1, radius: 12 });
+                        } else if (densidade === 'Média densidade') {
+                            marker.setStyle({ fillOpacity: 0.7, radius: 9 });
+                        } else {
+                            marker.setStyle({ fillOpacity: 0.5, radius: 6 });
+                        }
+                    });
+                    break;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('search-button').addEventListener('click', searchAddress);
+        document.getElementById('address-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchAddress();
+            }
+        });
+        document.getElementById('address-search').addEventListener('input', function(e) {
+            showSearchSuggestions(e.target.value);
+        });
+
+        // Fechar sugestões ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                hideSearchResults();
+            }
+        });
+
+        // Inicializar mapa
+        createBairroMarkers();
+        createBairrosList();
+
+        // Animações de entrada
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+

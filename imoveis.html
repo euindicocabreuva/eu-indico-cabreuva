@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imóveis - Eu Indico Cabreúva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        }
+        .property-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #10b981;
+        }
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .property-image {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <div class="h-12 w-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-home text-white text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Eu Indico Cabreúva</h1>
+                    <p class="text-sm text-gray-600">Imóveis em Cabreúva</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-emerald-600 flex items-center transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span>Voltar</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-4">Encontre seu Imóvel Ideal</h2>
+            <p class="text-xl text-emerald-100 mb-8">Compra, venda e locação em Cabreúva</p>
+            <div class="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
+                <button class="bg-white text-emerald-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-search mr-2"></i>
+                    Estou Procurando
+                </button>
+                <button class="bg-emerald-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-900 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>
+                    Anunciar Imóvel
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filtros -->
+    <section class="bg-white py-6 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <select class="border border-gray-300 rounded-lg px-3 py-2">
+                    <option>Tipo</option>
+                    <option>Casa</option>
+                    <option>Apartamento</option>
+                    <option>Terreno</option>
+                    <option>Comercial</option>
+                </select>
+                <select class="border border-gray-300 rounded-lg px-3 py-2">
+                    <option>Finalidade</option>
+                    <option>Venda</option>
+                    <option>Locação</option>
+                </select>
+                <select class="border border-gray-300 rounded-lg px-3 py-2">
+                    <option>Bairro</option>
+                    <option>Centro</option>
+                    <option>Jacaré</option>
+                    <option>Vilarejo</option>
+                    <option>Bananal</option>
+                </select>
+                <input type="text" placeholder="Valor mín." class="border border-gray-300 rounded-lg px-3 py-2">
+                <input type="text" placeholder="Valor máx." class="border border-gray-300 rounded-lg px-3 py-2">
+                <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                    <i class="fas fa-search mr-2"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Seções de Compra/Venda -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Estou Vendendo -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="text-center mb-6">
+                    <div class="h-16 w-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tag text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Estou Vendendo</h3>
+                    <p class="text-gray-600">Anuncie seu imóvel gratuitamente</p>
+                </div>
+                <form class="space-y-4">
+                    <input type="text" placeholder="Título do anúncio" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                    <select class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                        <option>Tipo do imóvel</option>
+                        <option>Casa</option>
+                        <option>Apartamento</option>
+                        <option>Terreno</option>
+                        <option>Comercial</option>
+                    </select>
+                    <input type="text" placeholder="Valor (R$)" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                    <input type="text" placeholder="Endereço" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                    <textarea placeholder="Descrição do imóvel" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3"></textarea>
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>
+                        Anunciar Imóvel
+                    </button>
+                </form>
+            </div>
+
+            <!-- Estou Comprando -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="text-center mb-6">
+                    <div class="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Estou Comprando</h3>
+                    <p class="text-gray-600">Encontre o imóvel dos seus sonhos</p>
+                </div>
+                <form class="space-y-4">
+                    <select class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                        <option>Tipo desejado</option>
+                        <option>Casa</option>
+                        <option>Apartamento</option>
+                        <option>Terreno</option>
+                        <option>Comercial</option>
+                    </select>
+                    <select class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                        <option>Bairro preferido</option>
+                        <option>Centro</option>
+                        <option>Jacaré</option>
+                        <option>Vilarejo</option>
+                        <option>Bananal</option>
+                    </select>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="Valor mínimo" class="border border-gray-300 rounded-lg px-4 py-3">
+                        <input type="text" placeholder="Valor máximo" class="border border-gray-300 rounded-lg px-4 py-3">
+                    </div>
+                    <input type="email" placeholder="Seu e-mail para contato" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                    <textarea placeholder="Observações (opcional)" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3"></textarea>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-bell mr-2"></i>
+                        Criar Alerta
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Imóveis -->
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Imóveis Disponíveis</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Imóvel 1 -->
+            <div class="property-card bg-white rounded-lg shadow-md overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=200&fit=crop" 
+                     alt="Casa em Cabreúva" 
+                     class="property-image w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">Venda</span>
+                        <span class="text-2xl font-bold text-emerald-600">R$ 450.000</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-800 mb-2">Casa no Centro</h4>
+                    <p class="text-gray-600 text-sm mb-3">3 quartos • 2 banheiros • 150m²</p>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Casa ampla com quintal, próxima ao centro comercial de Cabreúva.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            Centro - Cabreúva
+                        </span>
+                        <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                            <i class="fas fa-eye mr-1"></i>
+                            Ver
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imóvel 2 -->
+            <div class="property-card bg-white rounded-lg shadow-md overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=200&fit=crop" 
+                     alt="Apartamento em Cabreúva" 
+                     class="property-image w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">Locação</span>
+                        <span class="text-2xl font-bold text-blue-600">R$ 1.200/mês</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-800 mb-2">Apartamento no Jacaré</h4>
+                    <p class="text-gray-600 text-sm mb-3">2 quartos • 1 banheiro • 80m²</p>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Apartamento moderno em condomínio fechado com área de lazer.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            Jacaré - Cabreúva
+                        </span>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-eye mr-1"></i>
+                            Ver
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imóvel 3 -->
+            <div class="property-card bg-white rounded-lg shadow-md overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=200&fit=crop" 
+                     alt="Terreno em Cabreúva" 
+                     class="property-image w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-semibold">Venda</span>
+                        <span class="text-2xl font-bold text-emerald-600">R$ 180.000</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-800 mb-2">Terreno no Vilarejo</h4>
+                    <p class="text-gray-600 text-sm mb-3">500m² • Plano • Documentado</p>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Terreno plano em área residencial, ideal para construção.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            Vilarejo - Cabreúva
+                        </span>
+                        <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                            <i class="fas fa-eye mr-1"></i>
+                            Ver
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+

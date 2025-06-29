@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eu Indico Cabreúva - Guia Completo da Cidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .modal {
+            backdrop-filter: blur(5px);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse-green {
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Modal de Questionário Inicial -->
+    <div id="initial-questionnaire-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center modal">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden fade-in">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200 hero-gradient text-white">
+                <h3 class="text-xl font-bold">Bem-vindo ao Eu Indico Cabreúva!</h3>
+                <button id="close-initial-modal" class="text-white hover:text-gray-200 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-700 mb-4">Para melhorar sua experiência, gostaríamos de saber um pouco sobre você:</p>
+                
+                <form id="initial-questionnaire-form">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Você está sozinho(a) hoje?</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_alone" value="sim" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Sim</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_alone" value="nao" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Não</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Você está com fome?</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_hungry" value="sim" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Sim</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_hungry" value="nao" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Não</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="looking_for" class="block text-sm font-medium text-gray-700 mb-2">O que você está procurando hoje?</label>
+                            <select id="looking_for" name="looking_for" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md border">
+                                <option value="">Selecione uma opção</option>
+                                <option value="agronegocio">Agronegócio</option>
+                                <option value="construcao">Construção</option>
+                                <option value="comercio">Comércio e Varejo</option>
+                                <option value="alimentacao">Alimentação e Bebidas</option>
+                                <option value="saude">Saúde e Bem-estar</option>
+                                <option value="educacao">Educação</option>
+                                <option value="transporte">Transporte e Veículos</option>
+                                <option value="lazer">Lazer e Cultura</option>
+                                <option value="servicos">Serviços Diversos</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="help_with" class="block text-sm font-medium text-gray-700 mb-2">Como podemos ajudar você hoje?</label>
+                            <textarea id="help_with" name="help_with" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" placeholder="Descreva o que você está procurando..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+                            Continuar
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button type="button" id="skip-questionnaire" class="text-sm text-gray-500 hover:text-emerald-600 transition-colors">
+                            Pular por enquanto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra Superior -->
+    <div class="bg-emerald-700 text-white py-2">
+        <div class="container mx-auto px-4 flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4">
+                <a href="tel:1145281000" class="hover:text-emerald-200 flex items-center transition-colors">
+                    <i class="fas fa-phone mr-1 text-xs"></i> (11) 4528-1000
+                </a>
+                <a href="mailto:contato@euindicocabreuva.com.br" class="hover:text-emerald-200 flex items-center transition-colors">
+                    <i class="fas fa-envelope mr-1 text-xs"></i> contato@euindicocabreuva.com.br
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#" class="hover:text-emerald-200 transition-colors">Acessibilidade</a>
+                <a href="#" class="hover:text-emerald-200 transition-colors">Revista Digital</a>
+                <a href="#anunciar" class="hover:text-emerald-200 transition-colors">Anuncie</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho com Logo -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <div class="h-12 w-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Eu Indico Cabreúva</h1>
+                    <p class="text-sm text-gray-600">Guia Completo da Cidade</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" id="main-search" placeholder="Pesquisar empresas, serviços..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent w-64">
+                    <div class="absolute left-3 top-2.5 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <a href="#anunciar" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300 pulse-green">
+                    Anunciar
+                </a>
+                <a href="#" class="text-gray-600 hover:text-emerald-600 flex items-center transition-colors" id="login-button">
+                    <i class="fas fa-user-circle text-xl"></i>
+                    <span class="ml-2">Entrar</span>
+                </a>
+            </div>
+            <button class="md:hidden text-gray-600 focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navegação Principal -->
+    <nav class="bg-white shadow-md border-t border-gray-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="mapa.html" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Mapa da Cidade</a>
+                    <a href="noticias.html" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Notícias</a>
+                    <a href="empregos.html" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Empregos</a>
+                    <a href="imoveis.html" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Imóveis</a>
+                    
+                    <!-- Dropdown Categorias -->
+                    <div class="relative group">
+                        <button class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium flex items-center transition-colors">
+                            Categorias
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-0 w-72 bg-white shadow-lg rounded-b-md hidden group-hover:block z-50">
+                            <div class="p-4 grid grid-cols-1 gap-2">
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-seedling mr-2 text-emerald-600"></i>Agronegócio e Agropecuária
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-hammer mr-2 text-emerald-600"></i>Construção e Materiais
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2 text-emerald-600"></i>Comércio e Varejo
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-utensils mr-2 text-emerald-600"></i>Alimentação e Bebidas
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-heartbeat mr-2 text-emerald-600"></i>Saúde e Bem-estar
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-graduation-cap mr-2 text-emerald-600"></i>Educação e Formação
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-car mr-2 text-emerald-600"></i>Transporte e Veículos
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-music mr-2 text-emerald-600"></i>Lazer e Cultura
+                                </a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded transition-colors">
+                                    <i class="fas fa-tools mr-2 text-emerald-600"></i>Serviços Diversos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#anunciar" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Anunciar</a>
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Revista Digital</a>
+                    
+                    <!-- Dropdown Bairros -->
+                    <div class="relative group">
+                        <button class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium flex items-center transition-colors">
+                            Bairros
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-0 w-56 bg-white shadow-lg rounded-b-md hidden group-hover:block z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors">
+                                <i class="fas fa-map-pin mr-2 text-emerald-600"></i>Jacaré
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors">
+                                <i class="fas fa-map-pin mr-2 text-emerald-600"></i>Vilarejo
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors">
+                                <i class="fas fa-map-pin mr-2 text-emerald-600"></i>Centro
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors">
+                                <i class="fas fa-map-pin mr-2 text-emerald-600"></i>Bananal
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors">
+                                <i class="fas fa-map-pin mr-2 text-emerald-600"></i>Pinhal
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 transition-colors">
+                                <i class="fas fa-map-pin mr-2 text-emerald-600"></i>Jundiuvira
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Serviços Municipais</a>
+                    <a href="#contato" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium transition-colors">Contato</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menu Mobile -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-4 py-2 space-y-1">
+                <a href="#" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Início</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Categorias</a>
+                <a href="#anunciar" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Anunciar</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Revista Digital</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Bairros</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Serviços Municipais</a>
+                <a href="#contato" class="block py-2 text-gray-700 hover:text-emerald-600 transition-colors">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Seção Hero -->
+    <section class="hero-gradient text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Descubra o Melhor de Cabreúva</h2>
+            <p class="text-xl mb-8 opacity-90">Encontre empresas, serviços e produtos locais com avaliações reais da comunidade</p>
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <input type="text" id="hero-search" placeholder="O que você está procurando em Cabreúva?" class="w-full pl-12 pr-20 py-4 text-gray-800 rounded-full text-lg focus:outline-none focus:ring-4 focus:ring-emerald-300">
+                    <div class="absolute left-4 top-4 text-gray-400">
+                        <i class="fas fa-search text-xl"></i>
+                    </div>
+                    <button class="absolute right-2 top-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-full font-medium transition-colors">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Categorias Principais -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Explore por Categoria</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-utensils text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Alimentação</h4>
+                    <p class="text-sm text-gray-600">Restaurantes, bares, cafés</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-heartbeat text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Saúde</h4>
+                    <p class="text-sm text-gray-600">Médicos, dentistas, farmácias</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shopping-cart text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Comércio</h4>
+                    <p class="text-sm text-gray-600">Lojas, supermercados</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tools text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Serviços</h4>
+                    <p class="text-sm text-gray-600">Manutenção, limpeza, beleza</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-graduation-cap text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Educação</h4>
+                    <p class="text-sm text-gray-600">Escolas, cursos, idiomas</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-car text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Transporte</h4>
+                    <p class="text-sm text-gray-600">Oficinas, combustível</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-music text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Lazer</h4>
+                    <p class="text-sm text-gray-600">Eventos, cultura, esportes</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors cursor-pointer card-hover">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hammer text-emerald-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Construção</h4>
+                    <p class="text-sm text-gray-600">Materiais, reformas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Destaques -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Empresas em Destaque</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card de Empresa Exemplo -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-r from-emerald-400 to-emerald-600 flex items-center justify-center">
+                        <i class="fas fa-utensils text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-xl font-semibold text-gray-800">Restaurante Exemplo</h4>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-medium px-2 py-1 rounded-full">MASTER PLUS</span>
+                        </div>
+                        <p class="text-gray-600 mb-3">Culinária brasileira com ingredientes locais</p>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="ml-2 text-sm text-gray-600">(47 avaliações)</span>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-3">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="text-sm">Centro, Cabreúva</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <a href="#" class="text-emerald-600 hover:text-emerald-700 font-medium">Ver detalhes</a>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fab fa-facebook"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fas fa-globe"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mais cards de exemplo -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                        <i class="fas fa-heartbeat text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-xl font-semibold text-gray-800">Clínica Saúde+</h4>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">AVANÇADO</span>
+                        </div>
+                        <p class="text-gray-600 mb-3">Atendimento médico especializado</p>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="ml-2 text-sm text-gray-600">(23 avaliações)</span>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-3">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="text-sm">Jacaré, Cabreúva</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <a href="#" class="text-emerald-600 hover:text-emerald-700 font-medium">Ver detalhes</a>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fab fa-facebook"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fas fa-globe"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-shopping-cart text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-xl font-semibold text-gray-800">Mercado Central</h4>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full">INTERMEDIÁRIO</span>
+                        </div>
+                        <p class="text-gray-600 mb-3">Produtos frescos e de qualidade</p>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="ml-2 text-sm text-gray-600">(89 avaliações)</span>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-3">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="text-sm">Centro, Cabreúva</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <a href="#" class="text-emerald-600 hover:text-emerald-700 font-medium">Ver detalhes</a>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fab fa-facebook"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-emerald-600"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Planos de Anúncio -->
+    <section id="anunciar" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-800 mb-4">Anuncie Seu Negócio</h3>
+                <p class="text-xl text-gray-600">Escolha o plano ideal para destacar sua empresa em Cabreúva</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                <!-- Plano Básico -->
+                <div class="bg-white border-2 border-gray-200 rounded-lg p-6 text-center card-hover">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Básico</h4>
+                    <div class="text-3xl font-bold text-gray-800 mb-4">R$ 99,99<span class="text-sm font-normal text-gray-600">/mês</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>✓ Nome da empresa</li>
+                        <li>✓ Categoria</li>
+                        <li>✓ Listagem básica</li>
+                    </ul>
+                    <button class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md transition-colors">
+                        Escolher Plano
+                    </button>
+                </div>
+
+                <!-- Plano Simples -->
+                <div class="bg-white border-2 border-gray-200 rounded-lg p-6 text-center card-hover">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Simples</h4>
+                    <div class="text-3xl font-bold text-gray-800 mb-4">R$ 198,99<span class="text-sm font-normal text-gray-600">/mês</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>✓ Tudo do Básico</li>
+                        <li>✓ Endereço completo</li>
+                        <li>✓ Sistema de avaliações</li>
+                    </ul>
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
+                        Escolher Plano
+                    </button>
+                </div>
+
+                <!-- Plano Intermediário -->
+                <div class="bg-white border-2 border-purple-200 rounded-lg p-6 text-center card-hover">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Intermediário</h4>
+                    <div class="text-3xl font-bold text-gray-800 mb-4">R$ 297,98<span class="text-sm font-normal text-gray-600">/mês</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>✓ Tudo do Simples</li>
+                        <li>✓ Galeria de fotos</li>
+                        <li>✓ Destaque na categoria</li>
+                    </ul>
+                    <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md transition-colors">
+                        Escolher Plano
+                    </button>
+                </div>
+
+                <!-- Plano Avançado -->
+                <div class="bg-white border-2 border-orange-200 rounded-lg p-6 text-center card-hover">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Avançado</h4>
+                    <div class="text-3xl font-bold text-gray-800 mb-4">R$ 396,97<span class="text-sm font-normal text-gray-600">/mês</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>✓ Tudo do Intermediário</li>
+                        <li>✓ Links para redes sociais</li>
+                        <li>✓ Link para site próprio</li>
+                    </ul>
+                    <button class="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-md transition-colors">
+                        Escolher Plano
+                    </button>
+                </div>
+
+                <!-- Plano Master Plus -->
+                <div class="bg-white border-2 border-emerald-200 rounded-lg p-6 text-center card-hover relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-4 py-1 rounded-full text-xs font-medium">
+                        MAIS POPULAR
+                    </div>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Master Plus</h4>
+                    <div class="text-3xl font-bold text-gray-800 mb-4">R$ 495,96<span class="text-sm font-normal text-gray-600">/mês</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>✓ Tudo do Avançado</li>
+                        <li>✓ Conteúdo personalizado</li>
+                        <li>✓ Destaque premium</li>
+                        <li>✓ Suporte prioritário</li>
+                    </ul>
+                    <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md transition-colors pulse-green">
+                        Escolher Plano
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Contato -->
+    <section id="contato" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-800 mb-4">Entre em Contato</h3>
+                <p class="text-xl text-gray-600">Estamos aqui para ajudar você a crescer em Cabreúva</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-6">Informações de Contato</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">Telefone</p>
+                                <p class="text-gray-600">(11) 4528-1000</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">E-mail</p>
+                                <p class="text-gray-600">contato@euindicocabreuva.com.br</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">Endereço</p>
+                                <p class="text-gray-600">Cabreúva, São Paulo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                            <input type="text" id="name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                            <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Assunto</label>
+                            <input type="text" id="subject" name="subject" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensagem</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md font-medium transition-colors">
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="h-8 w-8 bg-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold">Eu Indico Cabreúva</h4>
+                    </div>
+                    <p class="text-gray-400 mb-4">O guia completo para descobrir o melhor de Cabreúva.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold mb-4">Categorias</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Alimentação</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Saúde</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Comércio</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Serviços</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold mb-4">Links Úteis</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Sobre Nós</a></li>
+                        <li><a href="#anunciar" class="hover:text-emerald-400 transition-colors">Anunciar</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Termos de Uso</a></li>
+                        <li><a href="#" class="hover:text-emerald-400 transition-colors">Privacidade</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold mb-4">Contato</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2"></i>
+                            (11) 4528-1000
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            contato@euindicocabreuva.com.br
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            Cabreúva, SP
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Eu Indico Cabreúva. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Modal do questionário inicial
+        const initialModal = document.getElementById('initial-questionnaire-modal');
+        const closeInitialModal = document.getElementById('close-initial-modal');
+        const skipQuestionnaire = document.getElementById('skip-questionnaire');
+        const questionnaireForm = document.getElementById('initial-questionnaire-form');
+
+        // Fechar modal
+        closeInitialModal.addEventListener('click', () => {
+            initialModal.style.display = 'none';
+        });
+
+        skipQuestionnaire.addEventListener('click', () => {
+            initialModal.style.display = 'none';
+        });
+
+        // Processar formulário do questionário
+        questionnaireForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(questionnaireForm);
+            const responses = {};
+            
+            for (let [key, value] of formData.entries()) {
+                responses[key] = value;
+            }
+            
+            console.log('Respostas do questionário:', responses);
+            
+            // Aqui você pode processar as respostas e personalizar a experiência
+            // Por exemplo, destacar categorias específicas baseadas nas respostas
+            
+            initialModal.style.display = 'none';
+            
+            // Mostrar mensagem de boas-vindas personalizada
+            showWelcomeMessage(responses);
+        });
+
+        // Função para mostrar mensagem personalizada
+        function showWelcomeMessage(responses) {
+            let message = 'Obrigado pelas informações! ';
+            
+            if (responses.is_hungry === 'sim') {
+                message += 'Vamos te ajudar a encontrar ótimos restaurantes em Cabreúva. ';
+            }
+            
+            if (responses.looking_for) {
+                message += `Veja nossas opções em ${responses.looking_for}.`;
+            }
+            
+            // Criar e mostrar notificação
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-emerald-600 text-white p-4 rounded-lg shadow-lg z-50 fade-in';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remover notificação após 5 segundos
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Menu mobile
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Busca
+        const mainSearch = document.getElementById('main-search');
+        const heroSearch = document.getElementById('hero-search');
+
+        function performSearch(query) {
+            if (query.trim()) {
+                console.log('Buscando por:', query);
+                // Aqui você implementaria a lógica de busca real
+                // Por exemplo, filtrar empresas, redirecionar para página de resultados, etc.
+                
+                // Simulação de busca
+                alert(`Buscando por: "${query}" em Cabreúva...`);
+            }
+        }
+
+        mainSearch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch(mainSearch.value);
+            }
+        });
+
+        heroSearch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch(heroSearch.value);
+            }
+        });
+
+        // Botão de busca no hero
+        document.querySelector('.hero-gradient button').addEventListener('click', () => {
+            performSearch(heroSearch.value);
+        });
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animação de entrada para cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos os cards
+        document.querySelectorAll('.card-hover').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Formulário de contato
+        document.querySelector('#contato form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            console.log('Dados do formulário de contato:', data);
+            
+            // Aqui você implementaria o envio real do formulário
+            // Por exemplo, enviar para um servidor, API, etc.
+            
+            // Simulação de envio
+            alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+            e.target.reset();
+        });
+
+        // Botões dos planos de anúncio
+        document.querySelectorAll('#anunciar button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const planName = e.target.closest('.card-hover').querySelector('h4').textContent;
+                console.log('Plano selecionado:', planName);
+                
+                // Aqui você implementaria a lógica de seleção de plano
+                // Por exemplo, redirecionar para página de pagamento, abrir modal, etc.
+                
+                alert(`Você selecionou o plano ${planName}. Redirecionando para o cadastro...`);
+            });
+        });
+
+        // Fechar modal clicando fora dele
+        initialModal.addEventListener('click', (e) => {
+            if (e.target === initialModal) {
+                initialModal.style.display = 'none';
+            }
+        });
+
+        // Prevenir fechamento do modal clicando no conteúdo
+        document.querySelector('#initial-questionnaire-modal .bg-white').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
+

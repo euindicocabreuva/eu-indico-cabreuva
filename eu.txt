@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eu Indico Cabreúva - Guia Completo da Cidade</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .rating-stars {
+            color: #f1c40f;
+        }
+
+        .business-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .category-chip {
+            transition: all 0.3s ease;
+        }
+
+        .category-chip:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .review-card {
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Botão flutuante */
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 24px;
+            transition: background-color 0.3s;
+        }
+
+        .floating-button:hover {
+            background-color: #2980b9;
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+            z-index: 999;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+        }
+    </style>
+    <script>
+        let map;
+        let marker;
+
+        function initMap() {
+            const cabreuva = [-23.1855, -47.5251]; // Coordenadas de Cabreúva
+            map = L.map('map').setView(cabreuva, 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            marker = L.marker(cabreuva, { draggable: true }).addTo(map);
+
+            marker.on('dragend', function(event) {
+                const position = marker.getLatLng();
+                document.getElementById('latitude').value = position.lat;
+                document.getElementById('longitude').value = position.lng;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin modal functionality
+            const adminLinks = document.querySelectorAll('a[href="/admin"]');
+            const adminModal = document.getElementById('adminModal');
+            const closeModal = document.getElementById('closeAdminModal');
+            const adminForm = document.getElementById('adminLoginForm');
+
+            adminLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    adminModal.classList.remove('hidden');
+                });
+            });
+
+            closeModal.addEventListener('click', function() {
+                adminModal.classList.add('hidden');
+            });
+
+            adminForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('adminUsername').value;
+                const password = document.getElementById('adminPassword').value;
+
+                // Simulating credential verification
+                if(username === 'admin' && password === 'master123') {
+                    window.location.href = '/admin-dashboard.html'; // Redirect to admin dashboard
+                } else {
+                    alert('Credenciais inválidas!');
+                }
+            });
+
+            // Initial Questionnaire Modal functionality
+            const initialQuestionnaireModal = document.getElementById('initial-questionnaire-modal');
+            const closeInitialModal = document.getElementById('close-initial-modal');
+            const skipQuestionnaire = document.getElementById('skip-questionnaire');
+            const initialQuestionnaireForm = document.getElementById('initial-questionnaire-form');
+
+            // Show modal on page load (you might want to use localStorage to show it only once)
+            // For now, it shows on every visit as per original code comment
+            initialQuestionnaireModal.classList.remove('hidden');
+
+            closeInitialModal.addEventListener('click', function() {
+                initialQuestionnaireModal.classList.add('hidden');
+            });
+
+            skipQuestionnaire.addEventListener('click', function() {
+                initialQuestionnaireModal.classList.add('hidden');
+            });
+
+            initialQuestionnaireForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Here you would process the form data, e.g., send to a server or store in localStorage
+                console.log('Formulário de questionário enviado!');
+                initialQuestionnaireModal.classList.add('hidden');
+            });
+
+            // Mobile menu functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Mobile dropdowns
+            const mobileDropdownButtons = document.querySelectorAll('.mobile-dropdown-button');
+            mobileDropdownButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    content.classList.toggle('hidden');
+                    // Optional: rotate arrow icon
+                    const icon = this.querySelector('svg');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+
+            // Login Modal functionality
+            const loginButton = document.getElementById('login-button');
+            const loginModal = document.getElementById('login-modal');
+            const closeLoginModal = document.getElementById('close-login-modal');
+
+            if (loginButton) {
+                loginButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loginModal.classList.remove('hidden');
+                });
+            }
+
+            if (closeLoginModal) {
+                closeLoginModal.addEventListener('click', function() {
+                    loginModal.classList.add('hidden');
+                });
+            }
+        });
+    </script>
+</head>
+<body onload="initMap()" class="bg-emerald-50 min-h-screen">
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/5511999999999" target="_blank" class="floating-button whatsapp-button">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Acesso Administrativo</h3>
+                <button id="closeAdminModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="adminLoginForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="adminUsername">Usuário Master</label>
+                    <input type="text" id="adminUsername" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2" for="adminPassword">Senha</label>
+                    <input type="password" id="adminPassword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Entrar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Initial Questionnaire Modal -->
+    <div id="initial-questionnaire-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-emerald-600 text-white">
+                <h3 class="text-xl font-bold">Bem-vindo ao Eu Indico Cabreúva!</h3>
+                <button id="close-initial-modal" class="text-white hover:text-gray-200">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-700 mb-4">Para melhorar sua experiência, gostaríamos de saber um pouco sobre você:</p>
+
+                <form id="initial-questionnaire-form">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Você está sozinho(a) hoje?</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_alone" value="sim" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Sim</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_alone" value="nao" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Não</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Você está com fome?</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_hungry" value="sim" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Sim</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="is_hungry" value="nao" class="form-radio h-4 w-4 text-emerald-600">
+                                    <span class="ml-2 text-sm text-gray-700">Não</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="looking_for" class="block text-sm font-medium text-gray-700 mb-1">O que você está procurando hoje?</label>
+                            <select id="looking_for" name="looking_for" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md border">
+                                <option value="">Selecione uma opção</option>
+                                <option value="agronegocio">Agronegócio</option>
+                                <option value="construcao">Construção</option>
+                                <option value="comercio">Comércio e Varejo</option>
+                                <option value="alimentacao">Alimentação e Bebidas</option>
+                                <option value="saude">Saúde e Bem-estar</option>
+                                <option value="educacao">Educação</option>
+                                <option value="transporte">Transporte e Veículos</option>
+                                <option value="lazer">Lazer e Cultura</option>
+                                <option value="servicos">Serviços Diversos</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="help_with" class="block text-sm font-medium text-gray-700 mb-1">Como podemos ajudar você hoje?</label>
+                            <textarea id="help_with" name="help_with" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                            Continuar
+                        </button>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button type="button" id="skip-questionnaire" class="text-sm text-gray-500 hover:text-emerald-600">
+                            Pular por enquanto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="bg-emerald-700 text-white py-2">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-sm hover:text-emerald-200 flex items-center">
+                    <i class="fas fa-phone mr-1 text-xs"></i> (11) 4528-1000
+                </a>
+                <a href="#" class="text-sm hover:text-emerald-200 flex items-center">
+                    <i class="fas fa-envelope mr-1 text-xs"></i> contato@euindicocabreuva.com.br
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-sm hover:text-emerald-200">Acessibilidade</a>
+                <a href="#" class="text-sm hover:text-emerald-200">Revista Digital</a>
+                <a href="#" class="text-sm hover:text-emerald-200">Anuncie</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header with Logo -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <svg class="h-12 w-12 text-emerald-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+                        <path d="M2 17L12 22L22 17" fill="currentColor"/>
+                        <path d="M2 12L12 17L22 12" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Eu Indico Cabreúva</h1>
+                    <p class="text-sm text-gray-600">Guia Completo da Cidade</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Pesquisar..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent w-64">
+                    <div class="absolute left-3 top-2.5 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <a href="#" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                    Anunciar
+                </a>
+                <a href="#" class="text-gray-600 hover:text-emerald-600 flex items-center" id="login-button">
+                    <i class="fas fa-user-circle text-xl"></i>
+                    <span class="ml-2">Entrar</span>
+                </a>
+            </div>
+            <button class="md:hidden text-gray-600 focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="bg-white shadow-md border-t border-gray-200 sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium">Início</a>
+
+                    <!-- Categorias Dropdown -->
+                    <div class="relative group">
+                        <button class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium flex items-center">
+                            Categorias
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-0 w-72 bg-white shadow-lg rounded-b-md hidden group-hover:block">
+                            <div class="p-4 grid grid-cols-1 gap-2">
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Agronegócio e Agropecuária</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Construção e Materiais</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Comércio e Varejo</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Alimentação e Bebidas</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Saúde e Bem-estar</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Educação e Formação</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Transporte e Veículos</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Lazer e Cultura</a>
+                                <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 rounded">Serviços Diversos</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Anunciar Link -->
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium">Anunciar</a>
+
+                    <!-- Revista Digital Link -->
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium">Revista Digital</a>
+
+                    <!-- Bairros Dropdown -->
+                    <div class="relative group">
+                        <button class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium flex items-center">
+                            Bairros
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-0 w-56 bg-white shadow-lg rounded-b-md hidden group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Jacaré</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Vilarejo</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Centro</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Bananal</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Pinhal</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Jundiuvira</a>
+                        </div>
+                    </div>
+
+                    <!-- Serviços Municipais Link -->
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium">Serviços Municipais</a>
+
+                    <a href="#" class="py-4 px-3 text-gray-700 hover:text-emerald-600 font-medium">Contato</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <a href="#" class="block py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200">Início</a>
+
+            <!-- Mobile Categorias Dropdown -->
+            <div class="mobile-dropdown">
+                <button class="mobile-dropdown-button w-full text-left py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200 flex justify-between items-center">
+                    Categorias
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="mobile-dropdown-content hidden bg-gray-50 px-4 py-3">
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Agronegócio e Agropecuária</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Construção e Materiais</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Comércio e Varejo</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Alimentação e Bebidas</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Saúde e Bem-estar</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Educação e Formação</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Transporte e Veículos</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Lazer e Cultura</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Serviços Diversos</a>
+                </div>
+            </div>
+
+            <a href="#" class="block py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200">Anunciar</a>
+            <a href="#" class="block py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200">Revista Digital</a>
+
+            <!-- Mobile Bairros Dropdown -->
+            <div class="mobile-dropdown">
+                <button class="mobile-dropdown-button w-full text-left py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200 flex justify-between items-center">
+                    Bairros
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="mobile-dropdown-content hidden bg-gray-50 px-4">
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Jacaré</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Vilarejo</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Centro</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Bananal</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Pinhal</a>
+                    <a href="#" class="block py-2 text-sm text-gray-700 hover:text-emerald-600 border-b border-gray-200">Jundiuvira</a>
+                </div>
+            </div>
+
+            <a href="#" class="block py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200">Serviços Municipais</a>
+            <a href="#" class="block py-3 px-4 text-gray-700 hover:bg-emerald-50 border-b border-gray-200">Contato</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-500 rounded-xl shadow-lg overflow-hidden mb-10">
+            <div class="md:flex">
+                <div class="p-8 md:w-1/2">
+                    <h2 class="text-3xl font-bold text-white mb-4">Bem-vindo ao Eu Indico Cabreúva</h2>
+                    <p class="text-emerald-100 mb-6">Seu guia completo para conhecer, explorar e aproveitar tudo o que Cabreúva tem a oferecer.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-3 rounded-md font-medium transition duration-300">
+                            Explorar Categorias
+                        </a>
+                        <a href="#" class="bg-transparent border border-white text-white hover:bg-white hover:text-emerald-600 px-6 py-3 rounded-md font-medium transition duration-300" id="register-button">
+                            Cadastre-se
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <div class="h-64 md:h-full bg-emerald-800 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-emerald-200 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"

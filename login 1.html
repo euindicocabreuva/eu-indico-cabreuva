@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Painel Administrativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .login-bg {
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="login-bg min-h-screen flex items-center justify-center">
+    <div class="glass-effect rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="h-16 w-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-cog text-white text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">Painel Administrativo</h1>
+            <p class="text-gray-600">Eu Indico Cabreúva</p>
+        </div>
+
+        <!-- Formulário de Login -->
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-envelope mr-2"></i>
+                    E-mail
+                </label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    placeholder="admin@euindicocabreuva.com.br"
+                >
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-lock mr-2"></i>
+                    Senha
+                </label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    placeholder="Digite sua senha"
+                >
+            </div>
+
+            <button 
+                type="submit" 
+                class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                id="login-btn"
+            >
+                <i class="fas fa-sign-in-alt mr-2"></i>
+                Entrar
+            </button>
+        </form>
+
+        <!-- Divisor -->
+        <div class="my-6 flex items-center">
+            <div class="flex-1 border-t border-gray-300"></div>
+            <span class="px-4 text-gray-500 text-sm">ou</span>
+            <div class="flex-1 border-t border-gray-300"></div>
+        </div>
+
+        <!-- Login com Google -->
+        <button 
+            onclick="loginWithGoogle()" 
+            class="w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+        >
+            <i class="fab fa-google mr-2 text-red-500"></i>
+            Entrar com Google
+        </button>
+
+        <!-- Mensagem de erro -->
+        <div id="error-message" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            <span id="error-text"></span>
+        </div>
+
+        <!-- Mensagem de sucesso -->
+        <div id="success-message" class="hidden mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="success-text"></span>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="hidden mt-4 text-center">
+            <i class="fas fa-spinner fa-spin text-emerald-600 text-xl"></i>
+            <p class="text-gray-600 mt-2">Fazendo login...</p>
+        </div>
+
+        <!-- Informações de acesso -->
+        <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h3 class="text-sm font-semibold text-blue-800 mb-2">
+                <i class="fas fa-info-circle mr-2"></i>
+                Acesso de Desenvolvimento
+            </h3>
+            <p class="text-xs text-blue-700 mb-2">
+                <strong>E-mail:</strong> admin@euindicocabreuva.com.br
+            </p>
+            <p class="text-xs text-blue-700">
+                <strong>Senha:</strong> admin123
+            </p>
+        </div>
+
+        <!-- Link para o site -->
+        <div class="mt-6 text-center">
+            <a href="/" class="text-emerald-600 hover:text-emerald-700 text-sm">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Voltar ao Site
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            await login(email, password);
+        });
+
+        async function login(email, password) {
+            showLoading();
+            hideMessages();
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login/admin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess('Login realizado com sucesso! Redirecionando...');
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 1500);
+                } else {
+                    showError(data.error || 'Erro ao fazer login');
+                }
+                
+            } catch (error) {
+                console.error('Erro no login:', error);
+                showError('Erro de conexão. Tente novamente.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loginWithGoogle() {
+            showError('Login com Google será implementado em breve. Use o login padrão por enquanto.');
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('login-btn').disabled = true;
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('login-btn').disabled = false;
+        }
+
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            document.getElementById('error-message').classList.remove('hidden');
+        }
+
+        function showSuccess(message) {
+            document.getElementById('success-text').textContent = message;
+            document.getElementById('success-message').classList.remove('hidden');
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').classList.add('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+        }
+
+        // Verificar se já está logado
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/check-admin`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.authenticated && data.is_admin) {
+                    window.location.href = '/admin.html';
+                }
+            } catch (error) {
+                // Usuário não está logado, continuar na página de login
+            }
+        });
+    </script>
+</body>
+</html>
+

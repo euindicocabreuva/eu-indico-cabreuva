@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Eu Indico Cabreúva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Barra Superior -->
+    <div class="bg-emerald-700 text-white py-2">
+        <div class="container mx-auto px-4 flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4">
+                <span>Bem-vindo, Restaurante Exemplo!</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="hover:text-emerald-200 transition-colors">Ver Site</a>
+                <a href="#" class="hover:text-emerald-200 transition-colors">Suporte</a>
+                <a href="index.html" class="hover:text-emerald-200 transition-colors">Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <div class="h-12 w-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Eu Indico Cabreúva</h1>
+                    <p class="text-sm text-gray-600">Painel de Controle</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
+                        <i class="fas fa-bell text-xl mr-2"></i>
+                        <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1">3</span>
+                    </button>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mr-2">
+                        <i class="fas fa-user text-emerald-600"></i>
+                    </div>
+                    <span class="text-gray-700">Admin</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navegação do Dashboard -->
+    <nav class="bg-white shadow-sm border-t border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-8">
+                <a href="#" class="py-4 px-2 border-b-2 border-emerald-500 text-emerald-600 font-medium">Dashboard</a>
+                <a href="#" class="py-4 px-2 text-gray-600 hover:text-emerald-600 transition-colors">Perfil</a>
+                <a href="#" class="py-4 px-2 text-gray-600 hover:text-emerald-600 transition-colors">Avaliações</a>
+                <a href="#" class="py-4 px-2 text-gray-600 hover:text-emerald-600 transition-colors">Galeria</a>
+                <a href="#" class="py-4 px-2 text-gray-600 hover:text-emerald-600 transition-colors">Plano</a>
+                <a href="#" class="py-4 px-2 text-gray-600 hover:text-emerald-600 transition-colors">Relatórios</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Cards de Estatísticas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover fade-in">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                        <i class="fas fa-eye text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Visualizações</p>
+                        <p class="text-2xl font-bold text-gray-800">1,247</p>
+                        <p class="text-sm text-green-600">+12% este mês</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover fade-in">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                        <i class="fas fa-star text-yellow-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Avaliações</p>
+                        <p class="text-2xl font-bold text-gray-800">47</p>
+                        <p class="text-sm text-green-600">+3 esta semana</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover fade-in">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                        <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Nota Média</p>
+                        <p class="text-2xl font-bold text-gray-800">5.0</p>
+                        <p class="text-sm text-green-600">Excelente!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover fade-in">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Cliques no Perfil</p>
+                        <p class="text-2xl font-bold text-gray-800">324</p>
+                        <p class="text-sm text-green-600">+8% este mês</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coluna Principal -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Avaliações Recentes -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Avaliações Recentes</h2>
+                        <a href="#" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Ver todas</a>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="border-b border-gray-200 pb-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-emerald-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Maria Silva</h4>
+                                        <div class="flex text-yellow-400 text-sm mb-1">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="text-gray-600 text-sm">Excelente restaurante! A comida é deliciosa e o atendimento é muito bom.</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">2 dias atrás</span>
+                            </div>
+                        </div>
+
+                        <div class="border-b border-gray-200 pb-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">João Santos</h4>
+                                        <div class="flex text-yellow-400 text-sm mb-1">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="text-gray-600 text-sm">Sempre venho aqui com a família. Os pratos são bem servidos.</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">1 semana atrás</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Ana Costa</h4>
+                                        <div class="flex text-yellow-400 text-sm mb-1">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <p class="text-gray-600 text-sm">Boa comida caseira e ambiente agradável.</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">2 semanas atrás</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Visualizações -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Visualizações dos Últimos 30 Dias</h2>
+                    <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-gray-400 text-4xl mb-4"></i>
+                            <p class="text-gray-600">Gráfico de visualizações seria implementado aqui</p>
+                            <p class="text-sm text-gray-500">Integração com biblioteca de gráficos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Status do Plano -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Seu Plano</h3>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-crown text-emerald-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-gray-800 mb-2">Master Plus</h4>
+                        <p class="text-sm text-gray-600 mb-4">Plano ativo até 21/07/2024</p>
+                        <div class="bg-emerald-50 rounded-lg p-3 mb-4">
+                            <p class="text-emerald-800 text-sm font-medium">Todos os recursos liberados</p>
+                        </div>
+                        <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors">
+                            Gerenciar Plano
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Ações Rápidas</h3>
+                    <div class="space-y-3">
+                        <button class="w-full flex items-center justify-start px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-edit text-gray-600 mr-3"></i>
+                            <span class="text-gray-700">Editar Perfil</span>
+                        </button>
+                        
+                        <button class="w-full flex items-center justify-start px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-images text-gray-600 mr-3"></i>
+                            <span class="text-gray-700">Adicionar Fotos</span>
+                        </button>
+                        
+                        <button class="w-full flex items-center justify-start px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-clock text-gray-600 mr-3"></i>
+                            <span class="text-gray-700">Horário de Funcionamento</span>
+                        </button>
+                        
+                        <button class="w-full flex items-center justify-start px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-share text-gray-600 mr-3"></i>
+                            <span class="text-gray-700">Compartilhar Perfil</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dicas -->
+                <div class="bg-emerald-50 rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-lg font-bold text-emerald-800 mb-4">Dicas para Melhorar</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <i class="fas fa-lightbulb text-emerald-600 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-medium text-emerald-800 text-sm">Adicione mais fotos</h4>
+                                <p class="text-emerald-700 text-xs">Perfis com mais fotos recebem 40% mais visualizações</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-lightbulb text-emerald-600 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-medium text-emerald-800 text-sm">Responda às avaliações</h4>
+                                <p class="text-emerald-700 text-xs">Mostre que você se importa com o feedback dos clientes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-lightbulb text-emerald-600 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-medium text-emerald-800 text-sm">Mantenha informações atualizadas</h4>
+                                <p class="text-emerald-700 text-xs">Horários e contatos sempre em dia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suporte -->
+                <div class="bg-white rounded-lg shadow-lg p-6 fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Precisa de Ajuda?</h3>
+                    <div class="space-y-3">
+                        <a href="#" class="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
+                            <i class="fas fa-question-circle mr-3"></i>
+                            <span>Central de Ajuda</span>
+                        </a>
+                        
+                        <a href="#" class="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
+                            <i class="fas fa-phone mr-3"></i>
+                            <span>Falar com Suporte</span>
+                        </a>
+                        
+                        <a href="#" class="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
+                            <i class="fas fa-envelope mr-3"></i>
+                            <span>Enviar E-mail</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center mb-4">
+                <div class="h-8 w-8 bg-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-map-marker-alt text-white"></i>
+                </div>
+                <h4 class="text-lg font-semibold">Eu Indico Cabreúva</h4>
+            </div>
+            <p class="text-gray-400 mb-4">Painel de Controle - Área do Anunciante</p>
+            <p class="text-gray-400">&copy; 2024 Eu Indico Cabreúva. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Simulação de dados dinâmicos
+        function updateStats() {
+            // Aqui você faria chamadas para APIs para buscar dados reais
+            console.log('Atualizando estatísticas...');
+        }
+
+        // Ações rápidas
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                
+                switch(action) {
+                    case 'Editar Perfil':
+                        alert('Redirecionando para edição de perfil...');
+                        break;
+                    case 'Adicionar Fotos':
+                        alert('Abrindo galeria de fotos...');
+                        break;
+                    case 'Horário de Funcionamento':
+                        alert('Abrindo configurações de horário...');
+                        break;
+                    case 'Compartilhar Perfil':
+                        if (navigator.share) {
+                            navigator.share({
+                                title: 'Restaurante Exemplo - Eu Indico Cabreúva',
+                                text: 'Confira nosso perfil no Eu Indico Cabreúva!',
+                                url: 'empresa.html'
+                            });
+                        } else {
+                            alert('Link do perfil copiado para a área de transferência!');
+                        }
+                        break;
+                    case 'Gerenciar Plano':
+                        alert('Redirecionando para gerenciamento de plano...');
+                        break;
+                }
+            });
+        });
+
+        // Notificações
+        document.querySelector('.fa-bell').parentElement.addEventListener('click', function() {
+            alert('Você tem 3 novas notificações:\n\n1. Nova avaliação de Maria Silva\n2. Seu plano vence em 30 dias\n3. Dica: Adicione mais fotos ao seu perfil');
+        });
+
+        // Atualizar estatísticas a cada 30 segundos (simulação)
+        setInterval(updateStats, 30000);
+
+        // Animações de entrada
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+

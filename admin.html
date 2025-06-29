@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Eu Indico Cabreúva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+        }
+        .sidebar-item.active {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-left: 4px solid #10b981;
+        }
+        .card {
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .loading {
+            display: none;
+        }
+        .loading.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="flex justify-between items-center px-6 py-4">
+            <div class="flex items-center">
+                <div class="h-10 w-10 bg-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-cog text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">Painel Administrativo</h1>
+                    <p class="text-sm text-gray-600">Eu Indico Cabreúva</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="user-name" class="text-gray-700"></span>
+                <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md min-h-screen">
+            <nav class="mt-6">
+                <div class="px-6 py-3">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Menu Principal</h3>
+                </div>
+                <a href="#" onclick="showSection('dashboard')" class="sidebar-item active flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-chart-bar mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" onclick="showSection('companies')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-building mr-3"></i>
+                    Empresas
+                </a>
+                <a href="#" onclick="showSection('news')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-newspaper mr-3"></i>
+                    Notícias
+                </a>
+                <a href="#" onclick="showSection('jobs')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-briefcase mr-3"></i>
+                    Empregos
+                </a>
+                <a href="#" onclick="showSection('properties')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-home mr-3"></i>
+                    Imóveis
+                </a>
+                <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-star mr-3"></i>
+                    Avaliações
+                </a>
+                <a href="#" onclick="showSection('users')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-users mr-3"></i>
+                    Usuários
+                </a>
+                <a href="#" onclick="showSection('settings')" class="sidebar-item flex items-center px-6 py-3 text-gray-700">
+                    <i class="fas fa-cog mr-3"></i>
+                    Configurações
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Loading -->
+            <div id="loading" class="loading text-center py-12">
+                <i class="fas fa-spinner fa-spin text-4xl text-emerald-600"></i>
+                <p class="mt-4 text-gray-600">Carregando...</p>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card text-white p-6 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-emerald-100">Empresas</p>
+                                <p id="stats-companies" class="text-3xl font-bold">0</p>
+                            </div>
+                            <i class="fas fa-building text-4xl text-emerald-200"></i>
+                        </div>
+                    </div>
+                    <div class="bg-blue-600 text-white p-6 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100">Notícias</p>
+                                <p id="stats-news" class="text-3xl font-bold">0</p>
+                            </div>
+                            <i class="fas fa-newspaper text-4xl text-blue-200"></i>
+                        </div>
+                    </div>
+                    <div class="bg-purple-600 text-white p-6 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-purple-100">Empregos</p>
+                                <p id="stats-jobs" class="text-3xl font-bold">0</p>
+                            </div>
+                            <i class="fas fa-briefcase text-4xl text-purple-200"></i>
+                        </div>
+                    </div>
+                    <div class="bg-orange-600 text-white p-6 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-orange-100">Imóveis</p>
+                                <p id="stats-properties" class="text-3xl font-bold">0</p>
+                            </div>
+                            <i class="fas fa-home text-4xl text-orange-200"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-clock mr-2 text-yellow-600"></i>
+                            Empresas Pendentes
+                        </h3>
+                        <div id="pending-companies" class="space-y-3">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-star mr-2 text-yellow-600"></i>
+                            Avaliações Pendentes
+                        </h3>
+                        <div id="pending-reviews" class="space-y-3">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Companies Section -->
+            <div id="companies-section" class="section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Gerenciar Empresas</h2>
+                    <button onclick="showCompanyForm()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>
+                        Nova Empresa
+                    </button>
+                </div>
+                
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <select id="company-category-filter" class="border border-gray-300 rounded-lg px-3 py-2">
+                            <option value="">Todas as Categorias</option>
+                        </select>
+                        <select id="company-status-filter" class="border border-gray-300 rounded-lg px-3 py-2">
+                            <option value="">Todos os Status</option>
+                            <option value="approved">Aprovadas</option>
+                            <option value="pending">Pendentes</option>
+                        </select>
+                        <input type="text" id="company-search" placeholder="Buscar empresas..." class="border border-gray-300 rounded-lg px-3 py-2">
+                        <button onclick="filterCompanies()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                            <i class="fas fa-search mr-2"></i>
+                            Filtrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Companies List -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plano</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="companies-table" class="bg-white divide-y divide-gray-200">
+                                <!-- Será preenchido via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections will be added here -->
+            <div id="news-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gerenciar Notícias</h2>
+                <p class="text-gray-600">Seção de notícias em desenvolvimento...</p>
+            </div>
+
+            <div id="jobs-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gerenciar Empregos</h2>
+                <p class="text-gray-600">Seção de empregos em desenvolvimento...</p>
+            </div>
+
+            <div id="properties-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gerenciar Imóveis</h2>
+                <p class="text-gray-600">Seção de imóveis em desenvolvimento...</p>
+            </div>
+
+            <div id="reviews-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gerenciar Avaliações</h2>
+                <p class="text-gray-600">Seção de avaliações em desenvolvimento...</p>
+            </div>
+
+            <div id="users-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gerenciar Usuários</h2>
+                <p class="text-gray-600">Seção de usuários em desenvolvimento...</p>
+            </div>
+
+            <div id="settings-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Configurações do Site</h2>
+                <p class="text-gray-600">Seção de configurações em desenvolvimento...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const API_BASE = '/api';
+        let currentUser = null;
+
+        // Verificar autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/check-admin`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (!data.authenticated || !data.is_admin) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                currentUser = data.user;
+                document.getElementById('user-name').textContent = currentUser.name;
+                
+                // Carregar dashboard
+                loadDashboard();
+                
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                window.location.href = '/login.html';
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API_BASE}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+            }
+        }
+
+        function showSection(sectionName) {
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Remover classe active de todos os itens do menu
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Mostrar seção selecionada
+            document.getElementById(`${sectionName}-section`).classList.remove('hidden');
+            
+            // Adicionar classe active ao item do menu
+            event.target.classList.add('active');
+            
+            // Carregar dados da seção
+            switch(sectionName) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'companies':
+                    loadCompanies();
+                    break;
+                // Adicionar outros casos conforme necessário
+            }
+        }
+
+        async function loadDashboard() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/admin/dashboard/stats`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.stats) {
+                    // Atualizar cards de estatísticas
+                    document.getElementById('stats-companies').textContent = data.stats.companies.total;
+                    document.getElementById('stats-news').textContent = data.stats.news.total;
+                    document.getElementById('stats-jobs').textContent = data.stats.jobs.total;
+                    document.getElementById('stats-properties').textContent = data.stats.properties.total;
+                }
+                
+                // Carregar empresas pendentes
+                await loadPendingCompanies();
+                
+                // Carregar avaliações pendentes
+                await loadPendingReviews();
+                
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadPendingCompanies() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/companies/pending`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                const container = document.getElementById('pending-companies');
+                container.innerHTML = '';
+                
+                if (data.companies && data.companies.length > 0) {
+                    data.companies.slice(0, 5).forEach(company => {
+                        const item = document.createElement('div');
+                        item.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                        item.innerHTML = `
+                            <div>
+                                <p class="font-medium text-gray-800">${company.name}</p>
+                                <p class="text-sm text-gray-600">${company.category}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="approveCompany(${company.id})" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button onclick="rejectCompany(${company.id})" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                        container.appendChild(item);
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-gray-500 text-center">Nenhuma empresa pendente</p>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar empresas pendentes:', error);
+            }
+        }
+
+        async function loadPendingReviews() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/reviews/pending`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                const container = document.getElementById('pending-reviews');
+                container.innerHTML = '';
+                
+                if (data.reviews && data.reviews.length > 0) {
+                    data.reviews.slice(0, 5).forEach(review => {
+                        const item = document.createElement('div');
+                        item.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                        item.innerHTML = `
+                            <div>
+                                <p class="font-medium text-gray-800">${review.company_name}</p>
+                                <p class="text-sm text-gray-600">${review.author_name} - ${review.rating} estrelas</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="approveReview(${review.id})" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button onclick="rejectReview(${review.id})" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                        container.appendChild(item);
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-gray-500 text-center">Nenhuma avaliação pendente</p>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar avaliações pendentes:', error);
+            }
+        }
+
+        async function approveCompany(companyId) {
+            try {
+                const response = await fetch(`${API_BASE}/admin/companies/${companyId}/approve`, {
+                    method: 'PUT',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    loadPendingCompanies();
+                    loadDashboard();
+                }
+            } catch (error) {
+                console.error('Erro ao aprovar empresa:', error);
+            }
+        }
+
+        async function rejectCompany(companyId) {
+            if (confirm('Tem certeza que deseja rejeitar esta empresa?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/admin/companies/${companyId}/reject`, {
+                        method: 'PUT',
+                        credentials: 'include'
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert(data.message);
+                        loadPendingCompanies();
+                    }
+                } catch (error) {
+                    console.error('Erro ao rejeitar empresa:', error);
+                }
+            }
+        }
+
+        async function approveReview(reviewId) {
+            try {
+                const response = await fetch(`${API_BASE}/reviews/${reviewId}/approve`, {
+                    method: 'PUT',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    loadPendingReviews();
+                }
+            } catch (error) {
+                console.error('Erro ao aprovar avaliação:', error);
+            }
+        }
+
+        async function rejectReview(reviewId) {
+            if (confirm('Tem certeza que deseja rejeitar esta avaliação?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/admin/reviews/${reviewId}/reject`, {
+                        method: 'DELETE',
+                        credentials: 'include'
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert(data.message);
+                        loadPendingReviews();
+                    }
+                } catch (error) {
+                    console.error('Erro ao rejeitar avaliação:', error);
+                }
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+
+        // Placeholder functions
+        function loadCompanies() {
+            console.log('Carregando empresas...');
+        }
+
+        function showCompanyForm() {
+            console.log('Mostrar formulário de empresa...');
+        }
+
+        function filterCompanies() {
+            console.log('Filtrar empresas...');
+        }
+    </script>
+</body>
+</html>
+
